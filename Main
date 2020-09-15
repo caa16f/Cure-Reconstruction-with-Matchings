@@ -1,0 +1,116 @@
+#include <iostream>
+#include <cstring>
+#include <cctype>
+#include <stdio.h>
+#include<math.h>
+#include <vector>
+#include <string>
+#include <cstdlib>
+#include <sstream>
+#include <utility>
+#include <fstream>
+using namespace std;
+
+
+
+std::vector<int> compute_nn_edges( vector<pair<int,int> > vector) {
+    std::vector<int> rVect;
+
+    double shortestDistance = 1000;
+    double distance = 0;
+    int index;
+    for (int i = 0; i < vector.size(); i++) {
+        for (int j = 0; j < vector.size(); j++) {
+            if (i == j) {
+                //Do not calculate if i = j , it will just equal 0
+            } else {
+
+                distance = sqrt(pow(vector[i].first - vector[j].first, 2) + (pow(vector[i].second - vector[j].second, 2)));
+
+                if (distance <= shortestDistance) {
+                    shortestDistance = distance;
+                    index = j;
+                }
+            }
+        }
+        rVect.push_back(index);
+    }
+
+    return rVect;
+}
+
+std::vector<int> compute_matching(std::vector<int> vector, std::vector<pair<int,int> >points){
+    //If there is only one occurance of a index in the G1 array then that means that index
+    // is a sl-vertex
+
+    std::vector<int> sl_vertex_index;
+
+    int count = 0;
+    for(int i = 0; i < vector.size(); i++){
+        for(int j = 0 ; j < vector.size(); j++){
+            if(vector[i] == vector[j]){
+                count++;
+            }
+        }
+        if(count == 1){
+            sl_vertex_index.push_back(vector[i]);
+        }
+        count = 0;
+    }
+
+    //Next we need to compute weight for i and j
+
+    for(int i = 0; i < sl_vertex_index.size(); i++){
+        for(int j = 0 ; j < sl_vertex_index.size(); j++) {
+                if( i != j){
+
+                }
+                points[sl_vertex_index[i]];
+
+        }
+    }
+
+
+    return sl_vertex_index;
+
+}
+
+int main( int argc , char**argv) {
+    string line;    //Hold parsed lines
+    int totalPoints;        //Hold the total number of points
+    ifstream MyReadFile("test.txt");
+
+    vector<pair<int , int> >points;
+
+    int q = 0;
+    while(getline(MyReadFile, line)){
+        if(q == 0){
+            int x , y; char comma;
+            if (MyReadFile >> x >> comma >> y){
+                points.push_back(make_pair(x,y));
+            }
+        }else{
+                int x , y; char comma;
+                if (MyReadFile >> x >> comma >> y){
+                    points.push_back(make_pair(x,y));
+                }
+            }
+        q++;
+
+    }
+
+    MyReadFile.close();
+
+    vector<int> G1 = compute_nn_edges(points);
+    for(int i = 0; i < G1.size(); i++)
+    {
+    //    cout << G1[i] << endl;
+    }
+
+    vector<int> G2 = compute_matching(G1,points);
+    for(int i = 0; i < G2.size(); i++)
+    {
+        cout << "Line " << i+1<< " " << "--> " << G2[i] << endl;
+    }
+    return 0;
+}
